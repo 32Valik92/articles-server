@@ -5,7 +5,9 @@ import { configs } from "../configs";
 import { ITokenPair } from "../interfaces";
 
 class TokenService {
-  public generateTokenPair(payload: { _id: Types.ObjectId }): ITokenPair {
+  public generateTokenPair(payload: {
+    _id: Types.ObjectId | string;
+  }): ITokenPair {
     // Створюємо пару tokens. expiresIn - час життя їхнього
     const accessToken = jwt.sign(payload, configs.JWT_ACCESS_SECRET, {
       expiresIn: "1d",

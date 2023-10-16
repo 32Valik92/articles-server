@@ -1,2 +1,3 @@
-export * from "./Post";
-export * from "./User";
+export * from "./Post.model";
+export * from "./Token.model";
+export * from "./User.model";

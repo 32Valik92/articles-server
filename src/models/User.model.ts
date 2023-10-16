@@ -11,7 +11,7 @@ const UserSchema = new Schema(
       required: true,
       unique: true, // Only one example email for DB
     },
-    passwordHash: {
+    password: {
       type: String,
       required: true,
     },
