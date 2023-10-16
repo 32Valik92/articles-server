@@ -2,7 +2,9 @@ import * as jwt from "jsonwebtoken";
 import { Types } from "mongoose";
 
 import { configs } from "../configs";
-import { ITokenPair } from "../interfaces";
+import { ETokenType } from "../enums";
+import { ApiError } from "../errors";
+import { ITokenPair, ITokenPayload } from "../interfaces";
 
 class TokenService {
   public generateTokenPair(payload: {
@@ -20,6 +22,27 @@ class TokenService {
       accessToken,
       refreshToken,
     };
+  }
+
+  public checkToken(token: string, type: ETokenType): ITokenPayload {
+    try {
+      let secret: string;
+
+      // По якому ключі його перевіряти
+      switch (type) {
+        case ETokenType.Access:
+          secret = configs.JWT_ACCESS_SECRET;
+          break;
+        case ETokenType.Refresh:
+          secret = configs.JWT_REFRESH_SECRET;
+          break;
+      }
+
+      // Повертаємо payload or false для verify
+      return jwt.verify(token, secret) as ITokenPayload;
+    } catch (e) {
+      throw new ApiError("Token is not valid", 401);
+    }
   }
 }
 

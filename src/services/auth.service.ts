@@ -48,6 +48,18 @@ class AuthService {
       throw new ApiError(e.message, e.status);
     }
   }
+
+  public async getMe(payload: any): Promise<IUser> {
+    const user = (await User.findById(payload._id).select(
+      "-password",
+    )) as IUser;
+
+    if (!user) {
+      throw new ApiError("User is not found", 401);
+    }
+
+    return user;
+  }
 }
 
 export const authService = new AuthService();

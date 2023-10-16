@@ -31,7 +31,7 @@ module.exports = {
         "simple-import-sort/imports": "error",
         "simple-import-sort/exports": "error",
         "import/first": "error",
-        "import/newline-after-import": ["error", { "count": 1 }],
+        "import/newline-after-import": ["error", {"count": 1}],
         "import/no-duplicates": "error",
         'no-console': 'warn',
         'sort-imports': ['error', {
