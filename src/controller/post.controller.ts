@@ -46,6 +46,41 @@ class PostController {
       next(e);
     }
   }
+
+  public async create(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<IPost>> {
+    try {
+      const userId = req.res.locals.tokenPayload._id as string;
+      const postData = req.body as IPost;
+
+      const post = await postService.create(postData, userId);
+
+      return res.status(200).json(post);
+    } catch (e) {
+      next(e);
+    }
+  }
+
+  public async updateById(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<IPost>> {
+    try {
+      // const userId = req.res.locals.tokenPayload._id as string;
+      const { postId } = req.params;
+      const updateData = req.body as IPost;
+
+      const updatedPost = await postService.updateById(updateData, postId);
+
+      return res.status(200).json(updatedPost);
+    } catch (e) {
+      next(e);
+    }
+  }
 }
 
 export const postController = new PostController();

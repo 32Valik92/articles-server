@@ -36,6 +36,35 @@ class PostService {
       throw new ApiError(e.message, e.status);
     }
   }
+
+  public async create(dataPost: IPost, userId: string): Promise<IPost> {
+    try {
+      const post = (await Post.create({
+        ...dataPost,
+        user: userId,
+      })) as unknown as IPost;
+      return post;
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
+
+  public async updateById(updateData: IPost, postId: string): Promise<IPost> {
+    try {
+      const updatedPost = (await Post.findByIdAndUpdate(
+        {
+          _id: postId,
+        },
+        {
+          ...updateData,
+        },
+        { returnDocument: "after" },
+      )) as unknown as IPost;
+      return updatedPost;
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
 }
 
 export const postService = new PostService();
