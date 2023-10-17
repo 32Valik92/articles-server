@@ -12,7 +12,7 @@ const PostSchema = new Schema(
       unique: true,
     },
     tags: {
-      type: Array,
+      type: [String],
       default: [],
     },
     viewsCount: {
