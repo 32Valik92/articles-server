@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { ApiError } from "../errors";
+import { IUser } from "../interfaces";
 import { User } from "../models";
 
 class UserMiddleware {
@@ -21,6 +22,27 @@ class UserMiddleware {
 
         // Передаємо в дане поле об'єкта нашого користувача і йдемо далі
         res.locals.user = user;
+        next();
+      } catch (e) {
+        next(e);
+      }
+    };
+  }
+
+  public findExist(field: keyof IUser) {
+    return async (
+      req: Request,
+      res: Response,
+      next: NextFunction,
+    ): Promise<void> => {
+      try {
+        // Пошук по DB
+        const user = await User.findOne({ [field]: req.body[field] });
+
+        if (user) {
+          throw new ApiError("User with this email already exist", 409);
+        }
+
         next();
       } catch (e) {
         next(e);
