@@ -8,6 +8,8 @@ const router = Router();
 
 router.get("/", postController.getAll);
 
+router.get("/tags", postController.getLastTags);
+
 router.get(
   "/:postId",
   commonMiddleware.isIdValid("postId"),

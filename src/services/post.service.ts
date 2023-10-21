@@ -11,6 +11,20 @@ class PostService {
     }
   }
 
+  public async getLastTags(): Promise<string[]> {
+    try {
+      const posts = await Post.find().limit(5).exec();
+      const tags = posts
+        .map((post) => post.tags)
+        .flat()
+        .slice(0, 5);
+
+      return tags;
+    } catch (e) {
+      throw new ApiError(e.message, e.status);
+    }
+  }
+
   public async getById(postId: string): Promise<IPost> {
     try {
       const post = (await Post.findByIdAndUpdate(

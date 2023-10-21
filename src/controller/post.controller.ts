@@ -17,6 +17,19 @@ class PostController {
     }
   }
 
+  public async getLastTags(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response<string[]>> {
+    try {
+      const tags = await postService.getLastTags();
+      return res.json(tags);
+    } catch (e) {
+      next(e);
+    }
+  }
+
   public async getById(
     req: Request,
     res: Response,
