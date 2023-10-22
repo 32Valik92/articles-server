@@ -1,20 +1,46 @@
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
+import fs from "fs";
 import * as mongoose from "mongoose";
+import multer from "multer";
 
 import { configs } from "./configs";
 import { authRouter, postRouter } from "./routers";
 
 const app = express();
 
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json({ limit: "5mb" }));
 app.use(cors());
-app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use(express.urlencoded({ limit: "5mb", extended: true }));
+
+// Upload file
+const storage = multer.diskStorage({
+  destination: (_: any, __: any, cb: any) => {
+    if (!fs.existsSync("uploads")) {
+      fs.mkdirSync("uploads");
+    }
+    cb(null, "uploads");
+  },
+  filename: (_: any, file: any, cb: any) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+app.use("/uploads", express.static("uploads"));
 
 // Our policy
 app.use(cors());
 
 // Router
+
+app.post("/upload", upload.single("image"), (req, res) => {
+  res.json({
+    url: `/uploads/${req.file.originalname}`,
+  });
+});
+
 app.use("/auth", authRouter);
 app.use("/posts", postRouter);
 
