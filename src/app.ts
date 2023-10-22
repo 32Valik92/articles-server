@@ -15,13 +15,13 @@ app.use(express.urlencoded({ limit: "5mb", extended: true }));
 
 // Upload file
 const storage = multer.diskStorage({
-  destination: (_: any, __: any, cb: any) => {
+  destination: (_, __, cb) => {
     if (!fs.existsSync("uploads")) {
       fs.mkdirSync("uploads");
     }
     cb(null, "uploads");
   },
-  filename: (_: any, file: any, cb: any) => {
+  filename: (_, file, cb) => {
     cb(null, file.originalname);
   },
 });
@@ -30,12 +30,9 @@ const upload = multer({ storage });
 
 app.use("/uploads", express.static("uploads"));
 
-// Our policy
-app.use(cors());
-
 // Router
 
-app.post("/upload", upload.single("image"), (req, res) => {
+app.post("/upload", upload.single("image"), (req: Request, res: Response) => {
   res.json({
     url: `/uploads/${req.file.originalname}`,
   });
