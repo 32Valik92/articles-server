@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { ITokenPair, IUser } from "../interfaces";
+import { ILoginData, IUser } from "../interfaces";
 import { authService } from "../services";
 
 class AuthController {
@@ -8,11 +8,13 @@ class AuthController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<Response<void>> {
+  ): Promise<Response<ILoginData>> {
     try {
-      await authService.register(req.body);
+      const registerData = await authService.register(req.body);
 
-      return res.sendStatus(201);
+      return res.status(201).json({
+        ...registerData,
+      });
     } catch (e) {
       next(e);
     }
@@ -22,12 +24,12 @@ class AuthController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<Response<ITokenPair>> {
+  ): Promise<Response<ILoginData>> {
     try {
-      const tokensPair = await authService.login(req.body, req.res.locals.user);
+      const loginData = await authService.login(req.body, req.res.locals.user);
 
       return res.status(200).json({
-        ...tokensPair,
+        ...loginData,
       });
     } catch (e) {
       next(e);

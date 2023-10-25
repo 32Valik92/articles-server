@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { IPost } from "../interfaces/post.interface";
+import { IPost } from "../interfaces";
 import { postService } from "../services";
 
 class PostController {

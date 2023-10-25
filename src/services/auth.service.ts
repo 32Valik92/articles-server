@@ -1,20 +1,28 @@
 import { ApiError } from "../errors";
-import { ICredentials, ITokenPair, IUser } from "../interfaces";
+import { ICredentials, ILoginData, IUser } from "../interfaces";
 import { Token, User } from "../models";
 import { passwordService } from "./password.service";
 import { tokenService } from "./token.service";
 
 class AuthService {
-  public async register(data: IUser): Promise<void> {
+  public async register(data: IUser): Promise<ILoginData> {
     try {
       const hashedPassword = await passwordService.hash(data.password);
-      // const user = await User.create({ ...data, passwordHash: hashedPassword });
-      await User.create({ ...data, password: hashedPassword });
 
-      // const actionToken = tokenService.generateTokenPair({ _id: user._id });
+      const user = (await User.create({
+        ...data,
+        password: hashedPassword,
+      })) as unknown as any;
 
-      // console.log("user", user);
-      // console.log("token", actionToken);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...userData } = user._doc;
+
+      const tokenPair = await tokenService.generateTokenPair({ _id: user._id });
+
+      return {
+        ...userData,
+        tokenPair,
+      };
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }
@@ -23,8 +31,14 @@ class AuthService {
   public async login(
     credentials: ICredentials,
     user: IUser,
-  ): Promise<ITokenPair> {
+  ): Promise<ILoginData> {
     try {
+      const userMatcher = (await User.findOne({
+        email: credentials.email,
+      }).select("-password")) as unknown as any;
+
+      const userData: IUser = { ...userMatcher._doc };
+
       const isMatched = await passwordService.compare(
         credentials.password,
         user.password,
@@ -43,7 +57,10 @@ class AuthService {
         _userId: user._id,
       });
 
-      return tokenPair;
+      return {
+        ...userData,
+        tokenPair,
+      };
     } catch (e) {
       throw new ApiError(e.message, e.status);
     }

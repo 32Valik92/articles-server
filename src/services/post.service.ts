@@ -1,5 +1,5 @@
 import { ApiError } from "../errors";
-import { IPost } from "../interfaces/post.interface";
+import { IPost } from "../interfaces";
 import { Post } from "../models";
 
 class PostService {
