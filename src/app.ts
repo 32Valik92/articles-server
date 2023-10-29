@@ -52,6 +52,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
 const PORT = process.env.PORT || 4444;
 app.listen(PORT, () => {
-  mongoose.connect(configs.DB_URL);
+  mongoose.connect(process.env.DB_URL);
   console.log(`Server has started on PORT ${PORT}`);
 });
