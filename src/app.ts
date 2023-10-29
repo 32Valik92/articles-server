@@ -50,7 +50,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(process.env.PORT || configs.PORT, () => {
+const PORT = process.env.PORT || 4444;
+app.listen(PORT, () => {
   mongoose.connect(configs.DB_URL);
-  console.log(`Server has started on PORT ${configs.PORT}`);
+  console.log(`Server has started on PORT ${PORT}`);
 });
