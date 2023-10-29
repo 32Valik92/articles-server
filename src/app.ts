@@ -6,6 +6,7 @@ import multer from "multer";
 
 import { configs } from "./configs";
 import { authRouter, postRouter } from "./routers";
+import {authMiddleware} from "./middlewares";
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.post("/upload", upload.single("image"), (req: Request, res: Response) => {
   });
 });
 
+app.use("*", authMiddleware.checkAccessToken);
 app.use("/auth", authRouter);
 app.use("/posts", postRouter);
 
