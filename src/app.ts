@@ -50,7 +50,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(configs.PORT, () => {
+app.listen(configs.PORT || 4444, () => {
   mongoose.connect(configs.DB_URL);
   console.log(`Server has started on PORT ${configs.PORT}`);
 });
