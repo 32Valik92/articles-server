@@ -1,0 +1,15 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.postRouter = void 0;
+const express_1 = require("express");
+const controller_1 = require("../controller");
+const middlewares_1 = require("../middlewares");
+const validator_1 = require("../validator");
+const router = (0, express_1.Router)();
+router.get("/", controller_1.postController.getAll);
+router.get("/tags", controller_1.postController.getLastTags);
+router.get("/:postId", middlewares_1.commonMiddleware.isIdValid("postId"), controller_1.postController.getById);
+router.post("/", middlewares_1.commonMiddleware.isBodyValid(validator_1.PostValidator.postCreate), middlewares_1.authMiddleware.checkAccessToken, controller_1.postController.create);
+router.delete("/:postId", middlewares_1.commonMiddleware.isIdValid("postId"), middlewares_1.authMiddleware.checkAccessToken, controller_1.postController.deleteById);
+router.patch("/:postId", middlewares_1.commonMiddleware.isIdValid("postId"), middlewares_1.commonMiddleware.isBodyValid(validator_1.PostValidator.postUpdate), middlewares_1.authMiddleware.checkAccessToken, controller_1.postController.updateById);
+exports.postRouter = router;
