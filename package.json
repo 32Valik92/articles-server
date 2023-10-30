@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/app.ts",
   "scripts": {
-    "start": "node src/app.js",
+    "start": "node src/app.ts",
     "dev": "rimraf dist && tsc-watch --onSuccess \"npm run watch\"",
     "watch": "nodemon \"src/app.ts\" --watch \"./src\"",
     "heroku-postbuild": "tsc"
